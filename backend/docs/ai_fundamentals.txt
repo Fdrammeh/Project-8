@@ -1,0 +1,92 @@
+ARTIFICIAL INTELLIGENCE AND MACHINE LEARNING FUNDAMENTALS
+
+Introduction to Artificial Intelligence
+
+Artificial intelligence, commonly called AI, is a field of computer science focused on building systems that perform tasks associated with human intelligence. These tasks include understanding language, recognizing patterns, solving problems, making predictions, and generating content. AI systems can use rules written by developers, statistical models trained on data, or large neural networks that learn complex patterns.
+
+Artificial intelligence is a broad category. Machine learning is a subfield of AI in which systems learn patterns from examples rather than relying entirely on explicitly programmed rules. Deep learning is a subfield of machine learning that uses neural networks with multiple layers. Generative AI refers to systems that produce new content, including text, images, audio, and code.
+
+Traditional Programming and Machine Learning
+
+In traditional programming, a developer writes instructions that transform input data into an output. For example, a program that calculates sales tax applies a known formula to a purchase amount. The rules are explicit and predictable.
+
+Machine learning takes a different approach. A developer supplies training data and selects an algorithm. During training, the algorithm adjusts its internal parameters to identify patterns in the examples. After training, the model can make predictions on new data.
+
+For example, an email classification model can learn from thousands of emails labeled as spam or legitimate. It identifies patterns associated with each category and estimates whether a new email belongs to one of those categories. The model may make mistakes, so developers must evaluate its performance.
+
+Types of Machine Learning
+
+Supervised learning uses examples that include both input data and known answers. Classification predicts categories, such as whether a message is spam. Regression predicts numerical values, such as a house price or future demand.
+
+Unsupervised learning works with data that does not have predefined answer labels. Clustering groups similar items together. Dimensionality reduction represents data using fewer variables while attempting to preserve important patterns. These methods can help analysts explore large datasets.
+
+Reinforcement learning trains an agent to make decisions through interaction with an environment. The agent receives rewards or penalties and learns a policy intended to maximize long-term reward. This approach can be applied to robotics, games, and some resource-allocation problems.
+
+Training, Validation, and Testing
+
+A dataset is commonly divided into training, validation, and test sets. The training set helps the model learn its parameters. The validation set supports model selection and adjustment. The test set provides a final estimate of performance on data that was not used during training or model selection.
+
+Data leakage occurs when information from outside the permitted training process influences model development. Leakage can make evaluation scores look much better than real-world performance. Developers should separate datasets carefully and ensure that future information does not accidentally enter training examples.
+
+Overfitting occurs when a model learns the training examples too closely, including noise that does not generalize. An overfitted model can perform well on training data but poorly on new examples. Underfitting occurs when a model is too simple or insufficiently trained to capture useful patterns. Evaluating training and validation results helps identify these problems.
+
+Neural Networks and Deep Learning
+
+A neural network contains connected computational units often called neurons. Each connection has a weight, and neurons apply mathematical operations and activation functions to their inputs. Layers transform the input representation until the network produces an output.
+
+During training, the network compares its prediction with the expected answer using a loss function. An optimization algorithm adjusts model parameters to reduce that loss. Backpropagation calculates how changes in parameters contribute to the loss. Repeating this process over many examples can improve performance.
+
+Deep learning models can learn complex representations from text, images, audio, and other data. However, training large models can require substantial computing resources, high-quality datasets, and careful evaluation.
+
+Large Language Models
+
+A large language model, or LLM, is trained on large collections of text and related data to learn statistical patterns in language. Many modern LLMs use transformer architectures and attention mechanisms to model relationships between tokens in a sequence.
+
+A token is a unit of text processed by the model. A token may represent a word, part of a word, punctuation, or another text unit. Tokenization converts text into the sequence of identifiers used by the model. The model generates text by predicting likely next tokens based on the context and its learned parameters.
+
+An LLM can answer questions, summarize text, explain code, translate language, and assist with writing. It does not automatically have access to every document, website, or database. Its response may contain inaccurate statements, invented details, or outdated information. Important claims should be verified against trustworthy sources.
+
+Temperature is a generation setting that influences the variability of model outputs. Lower temperatures generally make output more predictable, while higher temperatures generally permit more variation. Temperature does not guarantee correctness or factuality.
+
+Embeddings and Semantic Similarity
+
+An embedding is a numerical representation of an item, such as a sentence, paragraph, image, or document. An embedding model maps the item to a vector, which is an ordered collection of numbers. The vector can capture aspects of the item's meaning or features.
+
+Semantic search uses embeddings to retrieve content based on meaning rather than exact keyword matches alone. For example, a query about helping users recover account access may retrieve a document about password resets even when the query and document use different words.
+
+Similarity can be measured with metrics such as cosine similarity or Euclidean distance. The meaning of a score depends on the metric and model. In distance-based retrieval, smaller distances often indicate more similar vectors. In similarity-based scoring, larger scores often indicate greater similarity. These values should not be interpreted interchangeably.
+
+Retrieval-Augmented Generation
+
+Retrieval-augmented generation, known as RAG, combines information retrieval with text generation. Instead of asking a language model to answer only from its learned parameters, an application retrieves relevant information from a document collection and supplies that information as context.
+
+A typical RAG pipeline has an ingestion stage and a question-answering stage. During ingestion, documents are loaded, divided into chunks, converted into embeddings, and stored in a vector database with metadata. During question answering, the user question is embedded, similar chunks are retrieved, and the application constructs a prompt containing the question and relevant context.
+
+The language model uses the supplied context to generate a response. A well-designed prompt instructs the model to stay within the available evidence and acknowledge when the evidence is insufficient. However, a prompt alone cannot guarantee that every answer will be correct. Retrieval quality, source quality, and evaluation all matter.
+
+Chunking is the process of splitting a large document into smaller pieces. Very large chunks may contain irrelevant information, while very small chunks may lose necessary context. Chunk size and overlap should be selected and evaluated for the intended documents and questions.
+
+Evaluating AI Systems
+
+AI evaluation should measure whether a system performs its intended task reliably. Classification tasks may use precision, recall, and F1 score. Precision measures how many predicted positive examples are actually positive. Recall measures how many actual positive examples the model successfully identifies. F1 combines precision and recall using their harmonic mean.
+
+For RAG applications, useful evaluation questions have known relevant sources and expected answers. Retrieval evaluation checks whether the appropriate documents or chunks are returned. Generation evaluation checks whether answers are supported by the retrieved context, relevant to the question, and sufficiently complete.
+
+Latency, resource use, and failure rates also matter. A system that produces accurate answers but takes too long to respond may not meet user needs. Testing should include questions that the documents can answer and questions they cannot answer.
+
+Responsible AI and Security
+
+Responsible AI development includes privacy protection, security, transparency, fairness, and human oversight. Training or retrieval data may contain sensitive information, so access controls and data-handling policies are important. Developers should consider whether the data is appropriate for the task and whether the system could expose information to unauthorized users.
+
+Prompt injection is an attack in which untrusted content attempts to override the intended instructions of an AI application. Retrieved documents must be treated as data rather than trusted system instructions. Applications should validate inputs, limit access to sensitive resources, and avoid executing generated code or commands without appropriate safeguards.
+
+AI systems should communicate uncertainty when evidence is incomplete. Human review is important for high-impact decisions. Developers should monitor performance after deployment because data, user behavior, and operating conditions can change over time.
+
+Practical Applications
+
+AI is used in customer support, fraud detection, medical image analysis, recommendation systems, document classification, translation, and predictive maintenance. The best approach depends on the problem, available data, cost, reliability requirements, and risks.
+
+A simple rule-based program may be preferable when the rules are known and stable. Machine learning may be useful when patterns are difficult to express manually and sufficient representative data is available. An LLM with RAG may be useful when users need natural-language answers grounded in a changing collection of documents.
+
+Successful AI engineering combines appropriate model selection with reliable software design, evaluation, monitoring, security, and clear communication about system limitations.
+EOF

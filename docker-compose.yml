@@ -1,0 +1,47 @@
+# docker-compose.yml  
+# =================================
+# Defines three services: backend, frontend, and ollama.
+# Run everything with:   docker-compose up --build
+#
+# TODO: Complete each service definition.
+# Refer to the Docker Compose lessons (Lessons 4 & 5) for guidance.
+
+
+
+services:
+
+  # ── 1. Ollama — local LLM server ──────────────────────────────────────────
+  ollama:
+    image: ollama/ollama:latest
+    volumes:
+      - ollama_data:/root/.ollama
+    ports:
+      - "11434:11434"
+
+  # ── 2. Backend — FastAPI RAG API ──────────────────────────────────────────
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    volumes:
+      - chroma_data:/app/rag_db
+    depends_on:
+      - ollama
+
+  # ── 3. Frontend — Streamlit UI ────────────────────────────────────────────
+  frontend:
+    build: ./frontend
+    ports:
+      - "8501:8501"
+    environment:
+      - BACKEND_URL=http://backend:8000
+    depends_on:
+      - backend
+
+# ── Named volumes ─────────────────────────────────────────────────────────
+
+volumes:
+  ollama_data:
+  chroma_data:

@@ -1,0 +1,133 @@
+
+DATABASES, REST APIS, AND BACKEND APPLICATIONS
+
+Introduction to Backend Development
+
+Backend development focuses on the server-side parts of an application. A backend receives requests, validates input, applies business rules, accesses data, and returns responses. A web application often separates the frontend that users interact with from the backend that performs processing and manages data.
+
+For example, a user may submit a question through a Streamlit interface. The frontend sends the question to a FastAPI endpoint. The backend retrieves relevant documents from a database, calls a language model, and returns an answer. The frontend then displays the response.
+
+Separating frontend and backend responsibilities makes an application easier to test, maintain, and deploy. It also allows different interfaces to use the same backend API.
+
+What Is an API?
+
+An application programming interface, or API, defines how software components communicate. A web API commonly exposes endpoints that clients access through HTTP. An endpoint combines a URL path with an HTTP method and defines the operation the server performs.
+
+For example, GET /health may report whether a service is available. GET /stats may return application statistics. POST /ask may accept a question and return an answer. POST /ingest may trigger document ingestion.
+
+APIs should have predictable request and response formats. JSON is commonly used because it represents structured data using objects, arrays, strings, numbers, booleans, and null values. Clear response schemas help clients understand the information returned by a server.
+
+HTTP Methods and Status Codes
+
+GET is commonly used to retrieve information without intentionally changing server state. POST is commonly used to submit data or request an operation. PUT often replaces a resource, while PATCH applies a partial update. DELETE requests removal of a resource.
+
+HTTP status codes communicate the outcome of a request. A 200 response generally means a request succeeded. A 201 response indicates that a resource was created. A 204 response indicates success without a response body.
+
+A 400 response indicates a bad request. A 401 response means authentication is required or invalid. A 403 response means the client is not authorized to perform the operation. A 404 response means the requested resource was not found. A 422 response is often used when submitted data fails validation. A 500 response indicates an unexpected server error. A 503 response indicates that a service is temporarily unavailable.
+
+Clients should check response status codes rather than assuming every request succeeded. Error responses should explain the problem without exposing secrets, passwords, internal paths, or sensitive implementation details.
+
+REST API Design
+
+REST is an architectural style commonly used to design web APIs around resources and standard HTTP behavior. Resource-oriented endpoints use clear names and consistent methods. For example, /students can represent a collection of students, while /students/12 can represent a particular student.
+
+Good API design uses consistent naming, appropriate status codes, input validation, and predictable error formats. API documentation should explain request fields, response fields, authentication requirements, and common failure conditions.
+
+An API should not trust user input simply because it is sent as JSON. The backend must validate types, required fields, allowed values, and length limits. It should reject invalid input before processing it. Input validation helps prevent unexpected errors and reduces security risks.
+
+FastAPI Fundamentals
+
+FastAPI is a Python framework for building APIs. It uses Python type hints to describe input and output data and integrates with Pydantic for validation. FastAPI can automatically generate interactive API documentation, commonly available at /docs.
+
+A basic FastAPI application creates an application object and defines route functions. A decorator such as @app.get("/") associates a Python function with a GET endpoint. The function returns data that FastAPI serializes into an HTTP response.
+
+Pydantic models define the expected shape of request and response data. For example, an AskRequest model may contain a question string, a result count, and a maximum retrieval distance. Validation can reject an empty question or an invalid result count before the RAG pipeline runs.
+
+FastAPI supports asynchronous functions, dependency injection, middleware, and structured exception handling. These features help developers organize larger applications and manage cross-cutting concerns such as authentication and request processing.
+
+Databases and Data Persistence
+
+A database stores information so that it can be retrieved and updated later. Relational databases organize data into tables with rows and columns. Tables can be connected using keys. A primary key identifies a row, and a foreign key refers to a key in another table.
+
+SQL is used to query and modify relational data. SELECT retrieves data, INSERT adds rows, UPDATE modifies rows, and DELETE removes rows. WHERE filters results, ORDER BY sorts them, and GROUP BY aggregates records into groups.
+
+Database constraints help maintain data integrity. A NOT NULL constraint requires a value. A UNIQUE constraint prevents duplicate values in a column or column combination. A foreign key can prevent references to nonexistent related records.
+
+Applications should use parameterized queries or trusted database abstractions instead of constructing SQL statements by directly concatenating untrusted input. This practice helps prevent SQL injection. Database credentials should be stored securely and should not be committed to public source repositories.
+
+Vector Databases
+
+A vector database stores numerical vectors and supports similarity search. In an AI application, an embedding model converts document chunks into vectors. The database stores the vectors alongside the original text and metadata such as filenames, section names, or chunk indexes.
+
+When a user asks a question, the application creates an embedding for the question and searches for nearby document vectors. The nearest results can provide relevant context for a language model.
+
+ChromaDB is a vector database that can store embeddings and metadata and perform similarity queries. It can calculate embeddings using a configured embedding function. In a basic RAG application, a persistent ChromaDB client stores its collection on disk so the data can survive process restarts.
+
+A collection organizes related records. Each record commonly has an identifier, document text, metadata, and an embedding. Upserting a record inserts it if it does not exist or updates it when the identifier already exists.
+
+Stable record identifiers are important for repeatable ingestion. If the same document is ingested repeatedly with consistent identifiers, upsert operations can update existing records rather than continually creating duplicates. If documents are removed or renamed, an ingestion process may need additional logic to remove obsolete records.
+
+Metadata makes retrieval more useful. A result can include the source filename and chunk index so the application can explain where its answer came from. Metadata filters can restrict retrieval to selected document types, departments, dates, or other attributes.
+
+The retrieval distance depends on the embedding model and metric used by the collection. A distance threshold can reject weak matches, but a threshold should be evaluated against representative queries. A single universal threshold does not work equally well for every embedding model or dataset.
+
+Environment Variables and Configuration
+
+Applications often need different settings in development, testing, and production. Environment variables allow developers to configure behavior without editing source code for each environment.
+
+Examples include BACKEND_URL, OLLAMA_URL, MODEL_NAME, CHROMA_PATH, MAX_RESULTS, and DEBUG. A local application may use localhost to connect to a service on the same machine. Inside Docker Compose, one container commonly reaches another container by using the service name as its hostname.
+
+Configuration values are strings when read from the environment. Applications should convert values such as maximum result counts into integers and numeric thresholds into floats. Boolean values should be parsed carefully so that the string "false" does not accidentally evaluate as true.
+
+Defaults can make local development easier, but required production settings should be checked at startup. Secrets such as API keys and passwords should not be hardcoded in source code. A .env file may be used for local configuration, but secret environment files should normally be excluded from version control.
+
+Docker and Service Networking
+
+Docker packages an application and its dependencies into a container image. A container runs an instance of that image with its own process environment. Containers can help make development and deployment environments more consistent.
+
+A Dockerfile describes how to build an image. It commonly selects a base image, sets a working directory, copies application files, installs dependencies, and defines a startup command.
+
+Docker Compose describes applications that contain multiple services. A RAG application might have a backend service, a frontend service, and an Ollama service. Each service can have its own image or build context, environment variables, ports, and dependencies.
+
+A container's localhost address refers to that same container, not to another container. Therefore, a backend inside Compose should usually connect to the Ollama service using the Compose service name and the service's internal port. A Streamlit frontend inside Compose should similarly use the backend service name to reach FastAPI.
+
+Port publishing maps a container port to a host port. For example, publishing port 8000 allows a developer to access the backend from the host using localhost:8000. Services can communicate over a Compose network without every service needing a published host port.
+
+Named volumes allow data to persist beyond the lifecycle of an individual container. A volume is useful for storing a ChromaDB database or Ollama model data. Without persistent storage, removing a container may remove data stored only in its writable container layer.
+
+Health Checks, Logging, and Error Handling
+
+A health endpoint provides information about whether an application or its dependencies are functioning. A basic health check may report application status, database status, and whether a required model service is reachable.
+
+A service can be running while still being unable to serve requests. For example, FastAPI may start successfully while Ollama is unavailable. Separating application health from dependency health makes failures easier to diagnose.
+
+Logging records useful events such as application startup, request failures, ingestion counts, and unexpected exceptions. Logs should be detailed enough to support troubleshooting but must not expose credentials, tokens, or private user content unnecessarily.
+
+Applications should handle network timeouts and connection errors. A backend that calls a model server should use a reasonable timeout and return a clear error if the model service cannot be reached. Clients should display useful messages rather than crashing when a request fails.
+
+Testing Backend Applications
+
+Automated tests help developers verify expected behavior and catch regressions. Unit tests focus on small components, while integration tests examine interactions between components. API tests can send requests to endpoints and verify status codes and response data.
+
+Important RAG API tests include checking the root endpoint, validating that an empty question is rejected, confirming that the health endpoint returns the expected fields, and ensuring that the ask endpoint returns an answer and structured sources.
+
+Tests should include successful requests and failure cases. A question with no relevant documents should trigger the application's insufficient-information behavior. A missing model service should produce a controlled error rather than an unhandled exception.
+
+Tests should be repeatable and should avoid depending on unpredictable external services whenever possible. Mocking a model server can make API tests faster and more reliable. A separate integration test can verify the real model connection when the required service is available.
+
+Security and Deployment
+
+Secure backend applications validate input, restrict access to sensitive operations, and protect credentials. CORS configuration should allow only the origins required by the frontend rather than permitting every origin without a reason.
+
+Production deployments should use appropriate authentication and authorization where private data or administrative operations are involved. Re-indexing documents may be an administrative operation, depending on the application. Error responses should not disclose internal stack traces or sensitive configuration.
+
+Dependencies should be tracked in requirements files or another dependency-management system. Developers should review dependency updates, keep images maintained, and avoid running services with unnecessary privileges.
+
+A deployment checklist should include configuration review, health checks, automated tests, data persistence, logging, network connectivity, and a recovery plan. A successful local run is an important milestone, but the application should also be tested in its intended containerized environment.
+
+Summary
+
+Backend engineering combines API design, input validation, database access, configuration, testing, and deployment. A reliable RAG application must coordinate the frontend, backend, vector database, and language model while handling failures gracefully.
+
+Understanding how these components communicate helps developers troubleshoot connection errors, data persistence issues, retrieval problems, and deployment differences. Clear API contracts, appropriate tests, and useful source citations make the application easier to maintain and more trustworthy.
+EOF
